@@ -1,24 +1,21 @@
-# option-test
+# How to run
 
-## Project setup
+- Set GOOGLLE API KEY on '/backend/.env.sample'
+- Rename file to '.env'
 ```
+cd backend
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+Launch backend server
+
 ```
+nodemon index.js
+```
+
+- Go to main folder
+
+```
+yarn install
 yarn serve
 ```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
