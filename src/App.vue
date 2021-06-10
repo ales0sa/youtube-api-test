@@ -15,6 +15,7 @@
       </span>
     </header>
     <main>
+      {{ errorData }}
       <div v-if="!results.error">
         <Result
           v-for="(vd, index) in results.items"
@@ -23,11 +24,13 @@
         />
       </div>
       <div v-else>
+        
         <h4>
           Oh no! Something bad happend! Blame the server or say it was a DDoS!
         </h4>
 
         <h5>Real reason:</h5>
+        
         <p v-html="results.error.message" />
       </div>
     </main>
@@ -49,17 +52,16 @@ export default {
       isMakingRequest: false,
       searchInput: "",
       searchText: null,
-      results: [{ error: null }],
+      results: [],
     };
   },
   created() {},
   watch: {
-    searchInput: function (val) {
+    searchInput: function () {
 
         // check if finished writing
         if (!this.isWriting) {
-          console.log(val)
-          
+
           setTimeout(() => {
 
             // call search
@@ -77,29 +79,37 @@ export default {
   },
   methods: {
     goSearch() {
-
+        this.errorData = '';
+        this.results   = [];
         // get value to query
         this.searchText = this.searchInput
 
         // check if minimum 3 chars
         if(this.searchText.length >= 3){
 
-
-          
           // fetch express server located in 'backend' folder
-          fetch("http://localhost:3000/?search=" + this.searchText)
-            .then((response) => response.json())
-            .then((data) => { 
 
-              this.results = data 
-            })            
-            .catch(function (error) {
-              if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              }
-            })
+          try {
+
+            fetch("http://localhost:3000/?search=" + this.searchText)
+              .then((response) => response.json())
+              .then((data) => {               
+                this.results = data
+              })            
+              .catch((error) => {                  
+                    
+                    if (!error.response) {
+                        // network error
+                        this.errorData = 'Error: Network Error. Please check if backend is running.';
+                    } 
+              })
+
+          } catch (error) {
+
+            console.log(error)
+            
+          }
+
         
         }
     },
